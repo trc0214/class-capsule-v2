@@ -1,0 +1,47 @@
+# 編輯器和 IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 構建和依賴
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 環境變量
+.env
+.env.local
+.env.*.local
+
+# 測試覆蓋
+coverage/
+**.coverage
+
+# 臨時文件
+tmp/
+temp/
+*.tmp
+
+# OS 文件
+.DS_Store
+Thumbs.db
+
+# 編譯的文件
+*.o
+*.pyc
+__pycache__/
+
+# IDE 工作區
+.vscode/settings.json
+.vscode/launch.json
+
+# 部署
+.vercel
+.netlify
