@@ -1,5 +1,6 @@
 /**
- * 配置管理模擬 - 本地安全存儲 API 密鑰
+ * 配置管理 - 支持環境變量、localStorage 和手動設置
+ * 密鑰優先級：環境變量 > localStorage > 手動輸入
  * 使用 localStorage 和簡單加密確保安全性
  */
 
@@ -7,6 +8,43 @@ class ConfigManager {
     constructor() {
         this.storagePrefix = 'classcapsule_';
         this.encryptionEnabled = true;
+        this.envLoaded = false;
+        this.initializeFromEnv();
+    }
+
+    /**
+     * 從環境變量初始化密鑰（開發環境）
+     * 環境變量可以來自：
+     * 1. Node.js 開發服務器 (server.js)
+     * 2. window.ENV 全局對象（由服務器注入）
+     * 3. envLoader 從 API 加載
+     */
+    async initializeFromEnv() {
+        try {
+            // 檢查 envLoader 是否已加載
+            if (typeof window !== 'undefined' && window.envLoader) {
+                await window.envLoader.initialize();
+                
+                const azureKey = window.envLoader.get('AZURE_SPEECH_KEY');
+                const geminiKey = window.envLoader.get('GEMINI_API_KEY');
+                
+                if (azureKey) {
+                    this.setKey('azureKey', azureKey);
+                    this.envLoaded = true;
+                }
+                
+                if (geminiKey) {
+                    this.setKey('geminiKey', geminiKey);
+                    this.envLoaded = true;
+                }
+
+                if (this.envLoaded) {
+                    console.log('[ConfigManager] 環境變量已加載并自動配置');
+                }
+            }
+        } catch (error) {
+            console.warn('[ConfigManager] 無法從環境變量加載:', error.message);
+        }
     }
 
     /**
