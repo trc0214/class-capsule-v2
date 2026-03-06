@@ -1,0 +1,30 @@
+[build]
+  command = ""
+  publish = "."
+  functions = "functions"
+
+[dev]
+  command = "python -m http.server 8000"
+  port = 8000
+  publish = "."
+  autolaunch = false
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self' https://aistudio.google.com https://generativelanguage.googleapis.com https://*.speech.microsoft.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.speech.microsoft.com https://generativelanguage.googleapis.com"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
