@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課堂膠囊 - 即時語音轉錄與筆記助手</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 課堂膠囊</h1>
+            <p class="subtitle">即時語音轉錄與 AI 智慧筆記助手</p>
+        </header>
+
+        <main>
+            <!-- 設定面板 -->
+            <section class="panel" id="configPanel">
+                <h2>⚙️ 設定您的 API 密鑰</h2>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <label for="azureKey">Azure Speech API 密鑰</label>
+                        <input 
+                            type="password" 
+                            id="azureKey" 
+                            placeholder="輸入您的 Azure Speech API 密鑰"
+                            class="config-input"
+                        >
+                        <small>Region: japaneast</small>
+                    </div>
+                    
+                    <div class="config-item">
+                        <label for="geminiKey">Gemini API 密鑰</label>
+                        <input 
+                            type="password" 
+                            id="geminiKey" 
+                            placeholder="輸入您的 Gemini API 密鑰"
+                            class="config-input"
+                        >
+                        <small>Google AI Studio 獲取密鑰</small>
+                    </div>
+                </div>
+                <button id="saveKeysBtn" class="btn btn-primary">💾 保存設定</button>
+                <button id="clearKeysBtn" class="btn btn-secondary">🗑️ 清除所有設定</button>
+                <p id="configStatus" class="status-message"></p>
+            </section>
+
+            <!-- 錄音控制面板 -->
+            <section class="panel" id="recordingPanel">
+                <h2>🎙️ 課堂錄音</h2>
+                
+                <div class="recording-controls">
+                    <button id="startBtn" class="btn btn-success btn-large" disabled>
+                        <span class="btn-icon">⏺️</span>
+                        開始錄音
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger btn-large" disabled>
+                        <span class="btn-icon">⏹️</span>
+                        停止錄音
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary btn-large">
+                        <span class="btn-icon">🔄</span>
+                        重置
+                    </button>
+                </div>
+
+                <div class="recording-status">
+                    <div class="status-indicator" id="statusIndicator">就緒</div>
+                    <div class="recording-time" id="recordingTime">00:00:00</div>
+                </div>
+
+                <div class="recognition-stats">
+                    <div class="stat-item">
+                        <label>識別狀態</label>
+                        <span id="recognitionStatus">未開始</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>句子數</label>
+                        <span id="sentenceCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>字符數</label>
+                        <span id="charCount">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 轉錄結果面板 -->
+            <section class="panel" id="transcriptPanel">
+                <h2>📝 即時轉錄</h2>
+                <div class="transcript-controls">
+                    <button id="copyTranscriptBtn" class="btn btn-secondary" disabled>
+                        📋 複製轉錄文本
+                    </button>
+                    <button id="downloadTranscriptBtn" class="btn btn-secondary" disabled>
+                        ⬇️ 下載轉錄 (TXT)
+                    </button>
+                    <button id="clearTranscriptBtn" class="btn btn-secondary" disabled>
+                        🗑️ 清除轉錄
+                    </button>
+                </div>
+                <div id="transcript" class="transcript-area">
+                    <p class="placeholder">轉錄文本將在此顯示...</p>
+                </div>
+            </section>
+
+            <!-- 摘要生成面板 -->
+            <section class="panel" id="summaryPanel">
+                <h2>✨ AI 智慧摘要</h2>
+                
+                <div class="summary-controls">
+                    <div class="summary-options">
+                        <label for="summaryStyle">摘要風格：</label>
+                        <select id="summaryStyle" class="select-control">
+                            <option value="structured">📊 結構化筆記</option>
+                            <option value="bullet">🔹 重點列表</option>
+                            <option value="qa">❓ 問答形式</option>
+                            <option value="mindmap">🔗 思維導圖</option>
+                        </select>
+
+                        <label for="summaryLength">摘要長度：</label>
+                        <select id="summaryLength" class="select-control">
+                            <option value="short">簡短（500字）</option>
+                            <option value="medium" selected>中等（1000字）</option>
+                            <option value="long">詳細（2000字）</option>
+                        </select>
+                    </div>
+
+                    <button id="generateSummaryBtn" class="btn btn-primary btn-large" disabled>
+                        <span class="btn-icon">🤖</span>
+                        生成 Gemini AI 摘要
+                    </button>
+                </div>
+
+                <div id="summary" class="summary-area">
+                    <p class="placeholder">摘要將在此顯示...</p>
+                </div>
+
+                <div class="summary-actions" id="summaryActions" style="display: none;">
+                    <button id="copySummaryBtn" class="btn btn-secondary">
+                        📋 複製摘要
+                    </button>
+                    <button id="downloadSummaryBtn" class="btn btn-secondary">
+                        ⬇️ 下載摘要 (Markdown)
+                    </button>
+                    <button id="clearSummaryBtn" class="btn btn-secondary">
+                        🗑️ 清除摘要
+                    </button>
+                </div>
+
+                <div id="summaryStatus" class="status-message"></div>
+            </section>
+
+            <!-- 進度指示 -->
+            <section class="progress-section">
+                <div id="progressContainer" style="display: none;">
+                    <p id="progressText">處理中...</p>
+                    <div class="progress-bar">
+                        <div id="progressBar" class="progress-fill"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>課堂膠囊 v1.0 | 開源教育科技 | <a href="#" id="helpBtn">幫助</a></p>
+        </footer>
+    </div>
+
+    <!-- 幫助對話框 -->
+    <div id="helpModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>使用指南</h2>
+            <div class="modal-body">
+                <h3>🔧 初次設置</h3>
+                <ol>
+                    <li>在最上方輸入您的 Azure Speech API 密鑰（japaneast 區域）</li>
+                    <li>輸入您的 Gemini API 密鑰</li>
+                    <li>點擊「保存設定」，密鑰會被安全地存儲在瀏覽器本地</li>
+                </ol>
+
+                <h3>🎙️ 錄音使用</h3>
+                <ol>
+                    <li>確認麥克風權限已授予</li>
+                    <li>點擊「開始錄音」開始即時轉錄</li>
+                    <li>邊講邊轉錄，系統會連續識別您的語音</li>
+                    <li>完成後點擊「停止錄音」</li>
+                </ol>
+
+                <h3>✨ 生成摘要</h3>
+                <ol>
+                    <li>選擇您偏好的摘要風格和長度</li>
+                    <li>點擊「生成 Gemini AI 摘要」</li>
+                    <li>AI 會自動生成結構化筆記</li>
+                </ol>
+
+                <h3>💡 重要提示</h3>
+                <ul>
+                    <li>API 密鑰存儲在您的瀏覽器本地，不會上傳到任何服務器</li>
+                    <li>確保網絡連接穩定以支持 2 小時的連續錄音</li>
+                    <li>支持中文和資工專有名詞的識別</li>
+                    <li>如遇識別中斷，系統會自動重新連接</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 錯誤提示框 -->
+    <div id="errorModal" class="modal" style="display: none;">
+        <div class="modal-content error">
+            <span class="close">&times;</span>
+            <h2>⚠️ 錯誤</h2>
+            <p id="errorMessage"></p>
+            <button class="btn btn-primary" id="errorCloseBtn">確定</button>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="azure-speech.js"></script>
+    <script src="gemini-integration.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
