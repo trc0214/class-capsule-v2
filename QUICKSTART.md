@@ -2,6 +2,8 @@
 
 ## 1️⃣ 獲取 API 密鑰 (5 分鐘)
 
+> 詳細環境變量管理方式見 [ENV.md](ENV.md)
+
 ### Azure Speech Service 密鑰
 
 ```

@@ -130,7 +130,14 @@ git push origin main
    - 複製轉錄文本或摘要
    - 下載為 TXT（轉錄）或 Markdown（摘要）格式
 
-## 🔑 如何獲取 API 密鑰
+## 🔑 API 密鑰管理
+
+> 👉 **詳細環境變量和密鑰管理方式見 [ENV.md](ENV.md)**
+
+支持多種安全方式管理 API 密鑰：
+- ✅ **推薦**: 使用 `.env.local` 文件（本地開發）+ Node.js 服務器
+- ✅ 部署平台密鑰管理（Vercel Secrets、Netlify Env vars）
+- ✅ 瀏覽器 localStorage（快速測試）
 
 ### Azure Speech Service 密鑰
 

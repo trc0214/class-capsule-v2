@@ -400,6 +400,7 @@ localStorage.getItem('classcapsule_geminiKey')
 - [Google Gemini API 文檔](https://ai.google.dev/docs)
 - [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 - [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+- **[環境變量管理 (ENV.md)](ENV.md)** - 詳細的密鑰管理指南
 
 ## 🤝 貢獻指南
 
