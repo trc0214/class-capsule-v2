@@ -1,0 +1,32 @@
+{
+  "name": "class-capsule-v2",
+  "version": "1.0.0",
+  "description": "Pure web-based classroom assistant with real-time transcription and AI-powered note generation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "dev:watch": "WATCH_ENV=true node server.js",
+    "serve": "python -m http.server 8000",
+    "serve:node": "npx http-server"
+  },
+  "keywords": [
+    "classroom",
+    "transcription",
+    "azure-speech",
+    "gemini-api",
+    "education"
+  ],
+  "author": "Class Capsule Contributors",
+  "license": "MIT",
+  "optionalDependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/class-capsule-v2.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
